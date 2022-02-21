@@ -18,7 +18,6 @@ export function TextContextProvider({ children }: ITextContextProviderProps) {
       const response: any = await axios.get(
         `${API_SENTENCE_LIKELY}${left}&prefix=${prefix}`
       );
-      console.log("response", response);
       const results = response?.data?.futures.map((future: any) => {
         return { suggestion: future.next, predictions: future.predictions };
       });
@@ -27,7 +26,6 @@ export function TextContextProvider({ children }: ITextContextProviderProps) {
     } catch (error) {
       setLoadingSuggestions(false);
     }
-    return "hi";
   };
 
   return (

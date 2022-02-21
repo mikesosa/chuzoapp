@@ -9,6 +9,10 @@
   display: flex;
 }
 
+.my-screen .full-height {
+  height: 15vh;
+}
+
 .my-screen .screen-row .result {
   direction: rtl;
   position: relative;
@@ -35,43 +39,24 @@
 
 .my-screen .suggestions-row {
   color: #000;
-  background-color: rgba(139, 139, 139, 0.301);
   padding: 5px 0;
   height: 5vh;
   font-weight: bold;
+  padding: 0;
 }
 
-.my-screen .suggestions-row ion-col {
+.my-screen .suggestions-row ion-col div:active {
+  background: lightgreen;
+  color: #000;
+}
+
+.my-screen .suggestions-row ion-col div {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000;
-  border-right: 2px solid gray;
+  background-color: #000;
+  width: 100%;
+  height: 100%;
+  border-radius: 2rem;
+  color: #fff;
 }
-
-.my-screen .suggestions-row ion-col:last-child {
-  border-right: none;
-}
-
-/* .my-screen .tooltip {
-  direction: rtl;
-  position: relative;
-  width: 90%;
-  font-size: 6.5em;
-  white-space: nowrap;
-  display: flex;
-  display: inline-block;
-  overflow: scroll;
-  text-align: center;
-  border-bottom: 1px dotted black;
-  color: #000;
-}
-
-.my-screen .actions {
-  width: 10%;
-  display: flex;
-  align-self: center;
-  justify-content: center;
-  font-size: 3.5em;
-  color: lightgreen;
-} */

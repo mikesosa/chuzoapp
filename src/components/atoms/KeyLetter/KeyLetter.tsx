@@ -10,7 +10,7 @@ export interface IKeyLetterProps {
 export function KeyLetter({ handleClick, character, size }: IKeyLetterProps) {
   return (
     <IonCol sizeLg={size} onClick={handleClick} className="key-letter">
-      {character}
+      <div>{character}</div>
     </IonCol>
   );
 }

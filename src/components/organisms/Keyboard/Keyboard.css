@@ -1,8 +1,11 @@
 .board-grid {
   margin: 0;
   padding: 0;
+  font-size: 9rem;
+  font-weight: bolder;
 }
 
 .board-grid ion-row:last-child {
-  height: 10vh;
+  height: 7vh;
+  font-size: 2rem !important;
 }

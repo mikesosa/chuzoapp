@@ -29,7 +29,7 @@ export function MyScreen({
       <IonRow className="suggestions-row">
         {suggestions.map(({ suggestion }, index) => (
           <IonCol onClick={() => suggestionClicked(suggestion)} key={index}>
-            {suggestion.toUpperCase()}
+            <div>{suggestion.toUpperCase()}</div>
           </IonCol>
         ))}
       </IonRow>

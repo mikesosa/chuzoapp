@@ -32,6 +32,12 @@ const Board: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screenText]);
 
+  // Get suggestions for the first time
+  useEffect(() => {
+    if (!suggestions.length) debouncedSearch("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [suggestions]);
+
   const handleErase = () => {
     setScreenText("");
     setSuggestions([]);
@@ -49,19 +55,8 @@ const Board: React.FC = () => {
     }
   };
 
-  const handleAcceptSuggestion = () => {
-    // Check if first letter of suggestion is the same as the last letter of the screen text
-    const suggestion = suggestions[0].suggestion;
-    const suggestionFirstLetter = suggestion.slice(0, 1).toLocaleLowerCase();
-    const screenLastLetter = screenText.slice(-1).toLocaleLowerCase();
-    // If so, then we can assume that the user is trying to type the whole word
-    if (suggestionFirstLetter === screenLastLetter) {
-      setScreenText(screenText.slice(0, -1) + suggestion.toUpperCase());
-    } else {
-      setScreenText(screenText + suggestion.toUpperCase());
-    }
-
-    setSuggestions([]);
+  const handleAcceptSuggestion = (word: string) => {
+    setScreenText(screenText + " " + word + " ");
   };
 
   const handleSpace = () => {
@@ -103,12 +98,12 @@ const Board: React.FC = () => {
       { key: "B", handleClick: () => handleClick("B") },
       { key: "N", handleClick: () => handleClick("N") },
       { key: "M", handleClick: () => handleClick("M") },
-      { key: "⬅️", handleClick: () => handleBackSpace() },
+      { key: "⬅", handleClick: () => handleBackSpace() },
     ],
     [
-      { key: "🔴", handleClick: () => handleErase(), size: "3" },
+      { key: "CLEAR", handleClick: () => handleErase(), size: "3" },
       { key: "_", handleClick: () => handleSpace(), size: "6" },
-      { key: "✅", handleClick: () => handleAcceptSuggestion(), size: "3" },
+      { key: "✔", handleClick: () => handleSpace(), size: "3" },
     ],
   ];
 
@@ -117,7 +112,9 @@ const Board: React.FC = () => {
       <MyScreen
         screenText={screenText}
         suggestions={suggestions}
-        suggestionClicked={(selection) => handleClick(selection.toUpperCase())}
+        suggestionClicked={(selection) =>
+          handleAcceptSuggestion(selection.toUpperCase())
+        }
       />
       <Keyboard boardCharacters={KEYBOARD_CHARACTERS} />
     </IonPage>

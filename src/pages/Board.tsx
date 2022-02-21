@@ -114,10 +114,12 @@ const Board: React.FC = () => {
 
   return (
     <IonPage className="board-page">
-      <MyScreen screenText={screenText} suggestions={suggestions} />
-      {/* <IonContent> */}
+      <MyScreen
+        screenText={screenText}
+        suggestions={suggestions}
+        suggestionClicked={(selection) => handleClick(selection.toUpperCase())}
+      />
       <Keyboard boardCharacters={KEYBOARD_CHARACTERS} />
-      {/* </IonContent> */}
     </IonPage>
   );
 };

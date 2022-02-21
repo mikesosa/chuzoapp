@@ -1,0 +1,6 @@
+.tooltipText {
+  color: rgba(0, 0, 0, 0.363);
+  display: contents;
+  position: relative;
+  z-index: 1;
+}

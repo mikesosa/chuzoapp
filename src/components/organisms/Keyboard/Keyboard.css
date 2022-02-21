@@ -1,0 +1,8 @@
+.board-grid {
+  margin: 0;
+  padding: 0;
+}
+
+.board-grid ion-row:last-child {
+  height: 10vh;
+}

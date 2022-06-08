@@ -30,7 +30,7 @@ const Board: React.FC = () => {
       });
   };
 
-  const handleSpeech = async (text: string) => {
+  const handleSpeech = (text: string) => {
     TextToSpeechAdvanced.speak({
       text: text.toLocaleLowerCase(),
       locale: "en-US",
@@ -143,7 +143,7 @@ const Board: React.FC = () => {
 
   const handleSend = async () => {
     setSending(true);
-    await handleSpeech(screenText);
+    handleSpeech(screenText);
     await sendNotification(screenText);
     setSending(false);
   };

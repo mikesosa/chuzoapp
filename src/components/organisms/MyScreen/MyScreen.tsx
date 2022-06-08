@@ -1,4 +1,4 @@
-import { IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
+import { IonCol, IonGrid, IonIcon, IonRow, IonSpinner } from "@ionic/react";
 import { Blinker } from "../../atoms";
 import { send } from "ionicons/icons";
 
@@ -8,12 +8,16 @@ export interface IMyScreenProps {
   screenText: string;
   suggestions: any[];
   suggestionClicked: (suggestion: string) => any;
+  onSend: () => any;
+  loading: boolean;
 }
 
 export function MyScreen({
   screenText,
   suggestions,
   suggestionClicked,
+  onSend,
+  loading,
 }: IMyScreenProps) {
   return (
     <IonGrid className="my-screen">
@@ -22,8 +26,12 @@ export function MyScreen({
           <Blinker />
           {screenText}
         </div>
-        <div className="actions">
-          <IonIcon icon={send}></IonIcon>
+        <div className={`actions ${loading ? "disabled" : "active"}`}>
+          {loading ? (
+            <IonSpinner />
+          ) : (
+            <IonIcon icon={send} onClick={onSend}></IonIcon>
+          )}
         </div>
       </div>
       <IonRow className="suggestions-row">

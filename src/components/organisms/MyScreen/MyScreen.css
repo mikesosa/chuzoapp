@@ -29,12 +29,19 @@
 
 .my-screen .screen-row .actions {
   color: #000;
-  background-color: burlywood;
+
   font-size: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 10%;
+}
+.active {
+  background-color: lightgreen;
+}
+
+.disabled {
+  background-color: dodgerblue;
 }
 
 .my-screen .suggestions-row {

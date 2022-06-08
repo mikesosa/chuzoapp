@@ -1,18 +1,47 @@
 import { IonPage } from "@ionic/react";
+import { TextToSpeechAdvanced } from "@awesome-cordova-plugins/text-to-speech-advanced";
 import { debounce } from "lodash";
 import { useContext, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { TextContext } from "../contexts";
-import "./Board.css";
-
 import { Keyboard, MyScreen } from "../components/organisms";
+import { PUSH_URL, PUSH_TOKEN, PUSH_USER } from "../utils/constants";
+import "./Board.css";
 
 const Board: React.FC = () => {
   const [screenText, setScreenText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [suggestionClicked, setSuggestionClicked] = useState(false);
   const { getSuggestions, suggestions, setSuggestions } =
     useContext(TextContext);
 
+  const sendNotification = async (msg: string) => {
+    await axios
+      .post(PUSH_URL, {
+        token: PUSH_TOKEN,
+        user: PUSH_USER,
+        message: msg,
+      })
+      .then((res: any) => {
+        console.log("Notification sent: ", res.data);
+      })
+      .catch((err: any) => {
+        console.log("Error at sendNotification: ", err);
+      });
+  };
+
+  const handleSpeech = async (text: string) => {
+    TextToSpeechAdvanced.speak({
+      text: text.toLocaleLowerCase(),
+      locale: "en-US",
+      identifier: "com.apple.ttsbundle.Samantha-compact",
+    });
+  };
+
   const handleClick = (letter: string) => {
+    setSuggestionClicked(false);
     setScreenText(screenText + letter);
+    handleSpeech(letter);
   };
 
   const debouncedSearch = useRef(
@@ -56,7 +85,12 @@ const Board: React.FC = () => {
   };
 
   const handleAcceptSuggestion = (word: string) => {
-    setScreenText(screenText + " " + word + " ");
+    if (word.charAt(0) === screenText.slice(-1) && !suggestionClicked) {
+      setScreenText(screenText.slice(0, -1) + word);
+    } else {
+      setScreenText(screenText + " " + word + " ");
+    }
+    handleSpeech(word);
   };
 
   const handleSpace = () => {
@@ -107,14 +141,24 @@ const Board: React.FC = () => {
     ],
   ];
 
+  const handleSend = async () => {
+    setSending(true);
+    await handleSpeech(screenText);
+    await sendNotification(screenText);
+    setSending(false);
+  };
+
   return (
     <IonPage className="board-page">
       <MyScreen
+        loading={sending}
+        onSend={handleSend}
         screenText={screenText}
         suggestions={suggestions}
-        suggestionClicked={(selection) =>
-          handleAcceptSuggestion(selection.toUpperCase())
-        }
+        suggestionClicked={(selection) => {
+          setSuggestionClicked(true);
+          handleAcceptSuggestion(selection.toUpperCase());
+        }}
       />
       <Keyboard boardCharacters={KEYBOARD_CHARACTERS} />
     </IonPage>

@@ -1,5 +1,5 @@
 .key-letter {
-  color: #000;
+  color: rgba(0, 0, 0, 0.049);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #8bd9fd3b;
+  background-color: #06060610;
   height: 100%;
   width: 100%;
   border-radius: 2rem;

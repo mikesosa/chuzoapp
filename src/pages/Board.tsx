@@ -15,6 +15,7 @@ const Board: React.FC = () => {
   const [suggestionClicked, setSuggestionClicked] = useState(false);
   const { getSuggestions, suggestions, setSuggestions } =
     useContext(TextContext);
+  const [spacePressed, setSpacePressed] = useState(false);
 
   const sendNotification = async (msg: string) => {
     await axios
@@ -31,8 +32,9 @@ const Board: React.FC = () => {
       });
   };
 
-  const handleSpeech = (text: string) => {
-    TextToSpeechAdvanced.speak({
+  const handleSpeech = async (text: string) => {
+    console.log("HANDLE SPEECH: ", text);
+    await TextToSpeechAdvanced.speak({
       text: text.toLocaleLowerCase(),
       locale: "en-US",
       identifier: "com.apple.ttsbundle.Samantha-compact",
@@ -40,6 +42,7 @@ const Board: React.FC = () => {
   };
 
   const handleClick = (letter: string) => {
+    setSpacePressed(false);
     setSuggestionClicked(false);
     setScreenText(screenText + letter);
     handleSpeech(letter);
@@ -48,7 +51,7 @@ const Board: React.FC = () => {
   const debouncedSearch = useRef(
     debounce(async (criteria) => {
       await handleSearch(criteria);
-    }, 700)
+    }, 500) // 500ms
   ).current;
 
   useEffect(() => {
@@ -69,11 +72,16 @@ const Board: React.FC = () => {
   }, [suggestions]);
 
   const handleErase = () => {
+    setSpacePressed(false);
     setScreenText("");
     setSuggestions([]);
+    handleSpeech("clear");
   };
 
-  const handleBackSpace = () => setScreenText(screenText.slice(0, -1));
+  const handleBackSpace = () => {
+    setSpacePressed(false);
+    setScreenText(screenText.slice(0, -1));
+  };
 
   const handleSearch = async (criteria: string) => {
     const left = criteria.slice(0, -1).toLocaleLowerCase();
@@ -86,6 +94,7 @@ const Board: React.FC = () => {
   };
 
   const handleAcceptSuggestion = (word: string) => {
+    setSpacePressed(false);
     if (word.charAt(0) === screenText.slice(-1) && !suggestionClicked) {
       setScreenText(screenText.slice(0, -1) + word);
     } else {
@@ -97,8 +106,10 @@ const Board: React.FC = () => {
   const handleSpace = () => {
     const screenLastLetter = screenText.slice(-1).toLocaleLowerCase();
     if (screenLastLetter !== " ") {
-      handleClick("\0 ");
+      setScreenText(screenText + " ");
     }
+    handleSpeech("space");
+    setSpacePressed(true);
   };
 
   const KEYBOARD_CHARACTERS = [
@@ -156,28 +167,48 @@ const Board: React.FC = () => {
         size: "6",
         className: "spaceBtn",
       },
-      { key: ",", handleClick: () => handleClick(","), size: "1" },
-      { key: ".", handleClick: () => handleClick("."), size: "1" },
+      {
+        key: ",",
+        handleClick: () => {
+          setScreenText(screenText + ",");
+          handleSpeech(",");
+        },
+        size: "1",
+      },
+      {
+        key: ".",
+        handleClick: () => {
+          setScreenText(screenText + ".");
+          handleSpeech("period");
+        },
+        size: "1",
+      },
       {
         key: (
           <IonIcon icon={shareOutline} style={{ fontSize: "3rem" }}></IonIcon>
         ),
-        handleClick: () => handleShare(),
+        handleClick: () => handleShare(screenText),
         size: "1",
         className: "shareBtn",
       },
     ],
   ];
 
-  const handleShare = async () => {
-    await SocialSharing.share(screenText);
+  const handleShare = async (text: string) => {
+    console.log("Share", text);
+    await SocialSharing.share(text);
     await sendNotification(screenText);
+  };
+
+  const handlePlayScreen = async () => {
+    await handleSpeech(screenText);
   };
 
   return (
     <IonPage className="board-page">
       <MyScreen
-        onIconClicked={() => handleSpeech(screenText)}
+        spacePressed={spacePressed}
+        onIconClicked={handlePlayScreen}
         screenText={screenText}
         suggestions={suggestions}
         suggestionClicked={(selection) => {

@@ -5,8 +5,8 @@
 
 .my-screen .screen-row {
   height: 10vh;
-  width: 100%;
-  display: flex;
+  /* width: 100%; */
+  /* display: flex; */
 }
 
 .my-screen .full-height {
@@ -15,16 +15,34 @@
 
 .my-screen .screen-row .result {
   direction: rtl;
-  position: relative;
-  width: 90%;
-  font-size: 4.5rem;
-  white-space: nowrap;
-  display: inline-block;
-  overflow: scroll;
+  overflow-x: scroll;
   text-align: center;
-  border-bottom: 1px dotted black;
-  color: #000;
-  padding: 0 1rem;
+}
+
+.my-screen .screen-row .result span {
+  white-space: nowrap;
+  direction: ltr;
+  display: inline-block;
+  font-size: 4rem;
+  color: black;
+  border-right: 0.15em solid orange;
+  word-spacing: 0.2em;
+  animation: blink-caret 0.7s step-end infinite;
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
+}
+
+::-webkit-scrollbar-track {
+  display: none;
 }
 
 .my-screen .screen-row .actions {
@@ -32,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 10%;
+  cursor: pointer;
 }
 
 .my-screen .suggestions-row {
@@ -58,4 +76,10 @@
   height: 100%;
   border-radius: 2rem;
   color: #fff;
+}
+
+.my-screen .loadingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

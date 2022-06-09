@@ -6,6 +6,6 @@
 }
 
 .board-grid ion-row:last-child {
-  height: 7vh;
+  height: 10vh;
   font-size: 2rem !important;
 }

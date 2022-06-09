@@ -1,5 +1,6 @@
-import { IonPage } from "@ionic/react";
+import { IonIcon, IonPage } from "@ionic/react";
 import { TextToSpeechAdvanced } from "@awesome-cordova-plugins/text-to-speech-advanced";
+import { SocialSharing } from "@awesome-cordova-plugins/social-sharing";
 import { debounce } from "lodash";
 import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -7,10 +8,10 @@ import { TextContext } from "../contexts";
 import { Keyboard, MyScreen } from "../components/organisms";
 import { PUSH_URL, PUSH_TOKEN, PUSH_USER } from "../utils/constants";
 import "./Board.css";
+import { backspaceOutline, shareOutline } from "ionicons/icons";
 
 const Board: React.FC = () => {
   const [screenText, setScreenText] = useState("");
-  const [sending, setSending] = useState(false);
   const [suggestionClicked, setSuggestionClicked] = useState(false);
   const { getSuggestions, suggestions, setSuggestions } =
     useContext(TextContext);
@@ -132,27 +133,49 @@ const Board: React.FC = () => {
       { key: "B", handleClick: () => handleClick("B") },
       { key: "N", handleClick: () => handleClick("N") },
       { key: "M", handleClick: () => handleClick("M") },
-      { key: "⬅", handleClick: () => handleBackSpace() },
+      {
+        key: (
+          <IonIcon
+            icon={backspaceOutline}
+            style={{ fontSize: "8rem" }}
+          ></IonIcon>
+        ),
+        handleClick: () => handleBackSpace(),
+      },
     ],
     [
-      { key: "CLEAR", handleClick: () => handleErase(), size: "3" },
-      { key: "_", handleClick: () => handleSpace(), size: "6" },
-      { key: "✔", handleClick: () => handleSpace(), size: "3" },
+      {
+        key: "CLEAR",
+        handleClick: () => handleErase(),
+        size: "3",
+        className: "clearBtn",
+      },
+      {
+        key: "SPACE",
+        handleClick: () => handleSpace(),
+        size: "6",
+        className: "spaceBtn",
+      },
+      { key: ",", handleClick: () => handleClick(","), size: "1" },
+      { key: ".", handleClick: () => handleClick("."), size: "1" },
+      {
+        key: <IonIcon icon={shareOutline} size="large"></IonIcon>,
+        handleClick: () => handleShare(),
+        size: "1",
+        className: "shareBtn",
+      },
     ],
   ];
 
-  const handleSend = async () => {
-    setSending(true);
-    handleSpeech(screenText);
+  const handleShare = async () => {
+    await SocialSharing.share(screenText);
     await sendNotification(screenText);
-    setSending(false);
   };
 
   return (
     <IonPage className="board-page">
       <MyScreen
-        loading={sending}
-        onSend={handleSend}
+        onIconClicked={() => handleSpeech(screenText)}
         screenText={screenText}
         suggestions={suggestions}
         suggestionClicked={(selection) => {

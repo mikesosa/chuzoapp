@@ -19,3 +19,16 @@
   width: 100%;
   border-radius: 2rem;
 }
+
+.spaceBtn {
+  color: black;
+}
+
+.clearBtn {
+  color: black;
+}
+
+.shareBtn {
+  color: black;
+  --ionicon-stroke-width: 3rem;
+}

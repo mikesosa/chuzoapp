@@ -9,9 +9,10 @@ export interface IBoardRowProps {
 export function BoardRow({ characters }: IBoardRowProps) {
   return (
     <IonRow className="board-row">
-      {characters.map(({ key, handleClick, size }) => (
+      {characters.map(({ key, handleClick, size, className }) => (
         <KeyLetter
           size={size}
+          className={className}
           key={key}
           character={key}
           handleClick={() => handleClick(key)}

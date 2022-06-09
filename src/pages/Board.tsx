@@ -159,7 +159,9 @@ const Board: React.FC = () => {
       { key: ",", handleClick: () => handleClick(","), size: "1" },
       { key: ".", handleClick: () => handleClick("."), size: "1" },
       {
-        key: <IonIcon icon={shareOutline} size="large"></IonIcon>,
+        key: (
+          <IonIcon icon={shareOutline} style={{ fontSize: "3rem" }}></IonIcon>
+        ),
         handleClick: () => handleShare(),
         size: "1",
         className: "shareBtn",
